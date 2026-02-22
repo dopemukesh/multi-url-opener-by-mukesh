@@ -100,8 +100,12 @@ document.addEventListener("DOMContentLoaded", () => {
     async function openAll(urls) {
         const mode = modeSelect.value;
 
+        if (urls.length === 0) return;
+
+        // GROUP MODE (separate window per host)
         if (mode === "group") {
             const groups = {};
+
             urls.forEach(url => {
                 const host = new URL(url).hostname;
                 if (!groups[host]) groups[host] = [];
@@ -111,18 +115,33 @@ document.addEventListener("DOMContentLoaded", () => {
             for (const host in groups) {
                 const win = await chrome.windows.create({ url: groups[host][0] });
                 for (let i = 1; i < groups[host].length; i++) {
-                    chrome.tabs.create({ windowId: win.id, url: groups[host][i] });
+                    chrome.tabs.create({
+                        windowId: win.id,
+                        url: groups[host][i]
+                    });
                 }
             }
+
             return;
         }
 
-        for (const url of urls) {
-            if (mode === "window") {
-                await chrome.windows.create({ url });
-            } else {
-                chrome.tabs.create({ url });
+        // WINDOW MODE (ALL URLs IN ONE WINDOW)
+        if (mode === "window") {
+            const win = await chrome.windows.create({ url: urls[0] });
+
+            for (let i = 1; i < urls.length; i++) {
+                chrome.tabs.create({
+                    windowId: win.id,
+                    url: urls[i]
+                });
             }
+
+            return;
+        }
+
+        // TAB MODE (same current window)
+        for (const url of urls) {
+            chrome.tabs.create({ url });
         }
     }
 

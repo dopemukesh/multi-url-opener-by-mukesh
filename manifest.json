@@ -1,7 +1,7 @@
 {
     "manifest_version": 3,
     "name": "Multi URL Opener by Mukesh",
-    "version": "1.0",
+    "version": "1.1",
     "description": "Open multiple URLs at once with advanced features.",
     "action": {
         "default_popup": "popup.html"
