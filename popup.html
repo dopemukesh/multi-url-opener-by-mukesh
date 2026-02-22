@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <title>Multi URL Opener</title>
+    <link rel="stylesheet" href="popup.css">
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="header-left">
+                <img src="icons/icon48.svg" alt="">
+                <label>Multi URL Opener by Mukesh</label>
+            </div>
+            <div class="header-right">
+                <span id="counter">0</span>
+                <button id="themeToggle">🌙</button>
+            </div>
+        </div>
+
+        <div class="input-area">
+            <textarea id="urlInput" autofocus placeholder="Enter your multiple urls here..."></textarea>
+            <button id="clearUrls">Clear All</button>
+        </div>
+        <div class="actions">
+            <button id="openAll">Open All</button>
+            <select id="modeSelect">
+                <option value="group" selected>Group by Host (Default)</option>
+                <option value="tab">Open in Tabs</option>
+                <option value="window">Open in New Windows</option>
+            </select>
+            <button id="openOne">One by One</button>
+        </div>
+
+        <div class="top-actions">
+            <button id="extractBtn">Extract URLs</button>
+            <button id="importBtn">Import TXT</button>
+            <button id="exportBtn">Export TXT</button>
+            <button id="copyBtn">Copy All</button>
+            <button id="copyCleanBtn">Copy Cleaned</button>
+            <input type="file" id="fileInput" accept=".txt" hidden>
+        </div>
+
+        <div class="settings">
+            <label><input type="checkbox" id="remember"> Remember URL List</label>
+
+            <label>Delay between pages (seconds):
+                <input type="number" id="delay" value="0" min="0">
+            </label>
+
+            <label>One by One Max Wait (seconds):
+                <input type="number" id="maxWait" value="2" min="1">
+            </label>
+
+            <label>Open only first
+                <input type="number" id="limit" value="0" min="0"> URL's
+            </label>
+
+            <div class="bottom-actions">
+                <button id="cleanup">Cleanup</button>
+                <button id="restore">Restore Defaults</button>
+            </div>
+        </div>
+
+        <div id="status"></div>
+
+    </div>
+
+    <script src="popup.js"></script>
+</body>
+
+</html>

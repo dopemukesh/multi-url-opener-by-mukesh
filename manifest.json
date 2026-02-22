@@ -1,0 +1,18 @@
+{
+    "manifest_version": 3,
+    "name": "Multi URL Opener by Mukesh",
+    "version": "1.0",
+    "description": "Open multiple URLs at once with advanced features.",
+    "action": {
+        "default_popup": "popup.html"
+    },
+    "permissions": [
+        "tabs",
+        "storage"
+    ],
+    "icons": {
+        "16": "icons/icon16.png",
+        "48": "icons/icon48.png",
+        "128": "icons/icon128.png"
+    }
+}
