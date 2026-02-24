@@ -9,6 +9,8 @@
 
 <body>
     <div class="container">
+
+        <!-- HEADER -->
         <div class="header">
             <div class="header-left">
                 <img src="icons/icon48.svg" alt="">
@@ -20,20 +22,30 @@
             </div>
         </div>
 
+        <!-- URL INPUT -->
         <div class="input-area">
             <textarea id="urlInput" autofocus placeholder="Enter your multiple urls here..."></textarea>
             <button id="clearUrls">Clear All</button>
         </div>
+
+        <!-- MAIN ACTIONS -->
         <div class="actions">
-            <button id="openAll">Open All</button>
+
+            <div class="open-options">
+                <button id="openAll" class="btn-primary">Open All</button>
+                <input type="number" id="repeatCount" value="1" min="1">
+            </div>
+
             <select id="modeSelect">
                 <option value="group" selected>Group by Host (Default)</option>
                 <option value="tab">Open in Tabs</option>
                 <option value="window">Open in New Windows</option>
             </select>
-            <button id="openOne">One by One</button>
+
+            <button id="openOne" class="btn-secondary">One by One</button>
         </div>
 
+        <!-- TOP ACTION BUTTONS -->
         <div class="top-actions">
             <button id="extractBtn">Extract URLs</button>
             <button id="importBtn">Import TXT</button>
@@ -43,19 +55,28 @@
             <input type="file" id="fileInput" accept=".txt" hidden>
         </div>
 
+        <!-- SETTINGS -->
         <div class="settings">
-            <label><input type="checkbox" id="remember"> Remember URL List</label>
 
-            <label>Delay between pages (seconds):
+            <label>
+                <input type="checkbox" id="remember">
+                Remember URL List
+            </label>
+
+            <label>
+                Delay between pages (seconds):
                 <input type="number" id="delay" value="0" min="0">
             </label>
 
-            <label>One by One Max Wait (seconds):
+            <label>
+                One by One Max Wait (seconds):
                 <input type="number" id="maxWait" value="2" min="1">
             </label>
 
-            <label>Open only first
-                <input type="number" id="limit" value="0" min="0"> URL's
+            <label>
+                Open only first
+                <input type="number" id="limit" value="0" min="0">
+                URL's
             </label>
 
             <div class="bottom-actions">
@@ -64,8 +85,33 @@
             </div>
         </div>
 
+        <!-- STATUS -->
         <div id="status"></div>
 
+    </div>
+
+
+    <!-- 🔥 REUSABLE PROFESSIONAL MODAL -->
+    <div id="appModal" class="modal-overlay hidden">
+        <div class="modal-box">
+
+            <div class="modal-header">
+                <div class="modal-icon" id="modalIcon">⚠️</div>
+                <h3 id="modalTitle">Title</h3>
+            </div>
+
+            <div class="modal-body">
+                <p id="modalMessage">
+                    Message goes here
+                </p>
+            </div>
+
+            <div class="modal-actions">
+                <button id="modalConfirm" class="btn-primary">OK</button>
+                <button id="modalCancel" class="btn-secondary">Cancel</button>
+            </div>
+
+        </div>
     </div>
 
     <script src="popup.js"></script>
