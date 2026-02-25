@@ -9,7 +9,6 @@
 
 <body>
     <div class="container">
-
         <!-- HEADER -->
         <div class="header">
             <div class="header-left">
@@ -22,37 +21,41 @@
             </div>
         </div>
 
-        <!-- URL INPUT -->
-        <div class="input-area">
-            <textarea id="urlInput" autofocus placeholder="Enter your multiple urls here..."></textarea>
-            <button id="clearUrls">Clear All</button>
-        </div>
-
-        <!-- MAIN ACTIONS -->
-        <div class="actions">
-
-            <div class="open-options">
-                <button id="openAll" class="btn-primary">Open All</button>
-                <input type="number" id="repeatCount" value="1" min="1">
+        <div class="url-input-section">
+            <!-- URL INPUT -->
+            <div class="input-area">
+                <textarea id="urlInput" autofocus placeholder="Enter your multiple urls here..."></textarea>
+                <button id="clearUrls">Clear All</button>
             </div>
 
-            <select id="modeSelect">
-                <option value="group" selected>Group by Host (Default)</option>
-                <option value="tab">Open in Tabs</option>
-                <option value="window">Open in New Windows</option>
-            </select>
+            <!-- MAIN ACTIONS -->
+            <div class="actions-container">
+                <div class="actions">
 
-            <button id="openOne" class="btn-secondary">One by One</button>
-        </div>
+                    <div class="open-options">
+                        <button id="openAll" class="btn-primary">Open All</button>
+                        <input type="number" id="repeatCount" value="1" min="1">
+                    </div>
 
-        <!-- TOP ACTION BUTTONS -->
-        <div class="top-actions">
-            <button id="extractBtn">Extract URLs</button>
-            <button id="importBtn">Import TXT</button>
-            <button id="exportBtn">Export TXT</button>
-            <button id="copyBtn">Copy All</button>
-            <button id="copyCleanBtn">Copy Cleaned</button>
-            <input type="file" id="fileInput" accept=".txt" hidden>
+                    <select id="modeSelect">
+                        <option value="group" selected>Group by Host (Default)</option>
+                        <option value="tab">Open in Tabs</option>
+                        <option value="window">Open in New Windows</option>
+                    </select>
+
+                    <button id="openOne" class="btn-secondary">One by One</button>
+                </div>
+
+                <!-- TOP ACTION BUTTONS -->
+                <div class="top-actions">
+                    <button id="extractBtn">Extract URLs</button>
+                    <button id="importBtn">Import TXT</button>
+                    <button id="exportBtn">Export TXT</button>
+                    <button id="copyBtn">Copy All</button>
+                    <button id="copyCleanBtn">Copy Cleaned</button>
+                    <input type="file" id="fileInput" accept=".txt" hidden>
+                </div>
+            </div>
         </div>
 
         <!-- SETTINGS -->
