@@ -24,8 +24,13 @@
         <div class="url-input-section">
             <!-- URL INPUT -->
             <div class="input-area">
+                <div id="highlightLayer" class="textarea-highlight" aria-hidden="true"></div>
                 <textarea id="urlInput" autofocus placeholder="Enter your multiple urls here..."></textarea>
                 <button id="clearUrls">Clear All</button>
+                <div class="feature-toggles">
+                    <button id="toggleFindReplace" type="button">Find/Replace</button>
+                    <button id="toggleGenerator" type="button">URL Generator</button>
+                </div>
             </div>
 
             <!-- MAIN ACTIONS -->
@@ -54,6 +59,27 @@
                     <button id="copyBtn">Copy All</button>
                     <button id="copyCleanBtn">Copy Cleaned</button>
                     <input type="file" id="fileInput" accept=".txt" hidden>
+                </div>
+
+                <div id="findReplaceSection" class="find-replace hidden-feature">
+                    <input type="text" id="findText" placeholder="Find text">
+                    <input type="text" id="replaceText" placeholder="Replace with">
+                    <button id="replaceBtn">Find & Replace</button>
+                </div>
+
+                <div id="generatorSection" class="url-generator hidden-feature">
+                    <input type="text" id="patternInput"
+                        placeholder="Pattern URL (use {n} or existing number), e.g. https://abcd.com/files/ramu{n}.pdf">
+                    <div class="generator-controls">
+                        <input type="number" id="startNumber" value="1" step="1" placeholder="Start">
+                        <input type="number" id="endNumber" value="10" step="1" placeholder="End">
+                        <input type="number" id="stepNumber" value="1" min="1" step="1" placeholder="Step">
+                        <select id="sequenceMode">
+                            <option value="increment" selected>Increment</option>
+                            <option value="decrement">Decrement</option>
+                        </select>
+                        <button id="generateBtn">Generate URLs</button>
+                    </div>
                 </div>
             </div>
         </div>

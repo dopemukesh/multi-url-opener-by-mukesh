@@ -126,15 +126,17 @@ body.dark {
 /* Textarea */
 textarea {
     width: 100%;
-    height: 150px;
+    height: 160px;
     border-radius: var(--border-radius-lg);
     padding: 8px;
-    /* border: none; */
     border: 2px solid transparent;
     font-size: 13px;
+    line-height: 1.45;
     resize: none;
     outline: none;
-    background: var(--bg-input);
+    background: transparent;
+    position: relative;
+    z-index: 2;
 }
 
 textarea:focus {
@@ -146,7 +148,6 @@ body.dark textarea:focus {
 }
 
 body.dark textarea {
-    background: var(--bg-input-dark);
     border: 1px solid var(--border-dark);
     color: var(--text-secondary);
 }
@@ -154,12 +155,42 @@ body.dark textarea {
 /* Input Area */
 .input-area {
     position: relative;
+    border-radius: var(--border-radius-lg);
+    background: var(--bg-input);
+    margin-bottom: 14px;
+    height: fit-content;
+}
+
+body.dark .input-area {
+    background: var(--bg-input-dark);
+}
+
+.textarea-highlight {
+    position: absolute;
+    inset: 0;
+    border-radius: var(--border-radius-lg);
+    padding: 8px;
+    font-size: 13px;
+    line-height: 1.45;
+    white-space: pre-wrap;
+    word-break: break-word;
+    overflow: auto;
+    pointer-events: none;
+    color: transparent;
+    z-index: 1;
+}
+
+.textarea-highlight mark {
+    background: #ffe66d;
+    color: transparent;
+    border-radius: 3px;
 }
 
 #clearUrls {
     position: absolute;
     bottom: -4px;
     right: 8px;
+    z-index: 4;
     border-radius: var(--border-radius-circle);
     padding: 4px 10px;
     color: var(--danger-color);
@@ -180,6 +211,29 @@ body.dark #clearUrls {
 
 #clearUrls:active {
     scale: 96%;
+}
+
+.feature-toggles {
+    position: absolute;
+    bottom: -6px;
+    left: 8px;
+    z-index: 4;
+    display: flex;
+    gap: 4px;
+}
+
+.feature-toggles button {
+    padding: 4px 8px;
+    font-size: 10px;
+    white-space: nowrap;
+    border-radius: 100px;
+}
+
+.feature-toggles button.feature-active,
+body.dark .feature-toggles button.feature-active {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
 }
 
 /* Buttons - Base */
@@ -226,6 +280,100 @@ body.dark button:hover {
 body.dark .top-actions button:active {
     background: var(--primary-color);
     color: white;
+}
+
+.find-replace {
+    display: flex;
+    gap: 5px;
+    width: 100%;
+}
+
+.hidden-feature {
+    display: none !important;
+}
+
+.find-replace input[type="text"] {
+    flex: 1;
+    min-width: 0;
+    padding: 7px 9px;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-light);
+    outline: none;
+    background: var(--bg-input);
+    font-size: 12px;
+}
+
+.find-replace input[type="text"]:focus {
+    border: 1px solid var(--primary-color);
+}
+
+body.dark .find-replace input[type="text"] {
+    background: var(--bg-input-dark);
+    border: 1px solid var(--border-dark);
+    color: var(--text-secondary);
+}
+
+#replaceBtn {
+    white-space: nowrap;
+}
+
+.url-generator {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+#patternInput {
+    width: 100%;
+    padding: 7px 9px;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-light);
+    outline: none;
+    background: var(--bg-input);
+    font-size: 12px;
+}
+
+#patternInput:focus {
+    border: 1px solid var(--primary-color);
+}
+
+body.dark #patternInput {
+    background: var(--bg-input-dark);
+    border: 1px solid var(--border-dark);
+    color: var(--text-secondary);
+}
+
+.generator-controls {
+    display: flex;
+    gap: 5px;
+    width: 100%;
+    align-items: center;
+}
+
+.generator-controls input[type="number"] {
+    width: 72px;
+    padding: 7px;
+}
+
+#sequenceMode {
+    padding: 7px 9px;
+    border-radius: var(--border-radius-lg);
+    border: 1px solid var(--border-light);
+    font-size: 12px;
+    cursor: pointer;
+    outline: none;
+    background: var(--bg-input);
+}
+
+body.dark #sequenceMode {
+    background: var(--bg-input-dark);
+    border: 1px solid var(--border-dark);
+    color: var(--text-secondary);
+}
+
+#generateBtn {
+    white-space: nowrap;
 }
 
 /* Special Buttons */

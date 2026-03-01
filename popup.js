@@ -14,6 +14,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const modeSelect = document.getElementById("modeSelect");
     const repeatCountInput = document.getElementById("repeatCount");
     const clearBtn = document.getElementById("clearUrls");
+    const findTextInput = document.getElementById("findText");
+    const replaceTextInput = document.getElementById("replaceText");
+    const replaceBtn = document.getElementById("replaceBtn");
+    const findReplaceSection = document.getElementById("findReplaceSection");
+    const toggleFindReplaceBtn = document.getElementById("toggleFindReplace");
+    const highlightLayer = document.getElementById("highlightLayer");
+    const generatorSection = document.getElementById("generatorSection");
+    const toggleGeneratorBtn = document.getElementById("toggleGenerator");
+    const patternInput = document.getElementById("patternInput");
+    const startNumberInput = document.getElementById("startNumber");
+    const endNumberInput = document.getElementById("endNumber");
+    const stepNumberInput = document.getElementById("stepNumber");
+    const sequenceMode = document.getElementById("sequenceMode");
+    const generateBtn = document.getElementById("generateBtn");
 
     /* ================= UNIVERSAL MODAL ================= */
 
@@ -126,6 +140,71 @@ document.addEventListener("DOMContentLoaded", () => {
         const raw = extractUrls(urlInput.value, false).length;
         const unique = extractUrls(urlInput.value, true).length;
         counter.textContent = raw === unique ? raw : `${raw} (${unique} unique)`;
+        updateHighlights();
+    }
+
+    function escapeRegExp(value) {
+        return value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+    }
+
+    function escapeHtml(value) {
+        return value
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;");
+    }
+
+    function syncHighlightScroll() {
+        highlightLayer.scrollTop = urlInput.scrollTop;
+        highlightLayer.scrollLeft = urlInput.scrollLeft;
+    }
+
+    function updateHighlights() {
+        const text = urlInput.value || "";
+        const findText = findTextInput.value || "";
+        const isFindReplaceVisible = !findReplaceSection.classList.contains("hidden-feature");
+
+        if (!text || !findText || !isFindReplaceVisible) {
+            highlightLayer.innerHTML = "";
+            return;
+        }
+
+        const pattern = new RegExp(`(${escapeRegExp(findText)})`, "g");
+        const parts = text.split(pattern);
+
+        highlightLayer.innerHTML = parts.map((part, index) => {
+            if (index % 2 === 1) return `<mark>${escapeHtml(part)}</mark>`;
+            return escapeHtml(part);
+        }).join("");
+
+        syncHighlightScroll();
+    }
+
+    function applyPatternNumber(pattern, number) {
+        if (pattern.includes("{n}")) {
+            return pattern.split("{n}").join(String(number));
+        }
+
+        const numberMatch = pattern.match(/\d+/);
+        if (!numberMatch) return null;
+
+        const token = numberMatch[0];
+        const nextValue = /^0\d+$/.test(token)
+            ? String(number).padStart(token.length, "0")
+            : String(number);
+
+        return pattern.replace(token, nextValue);
+    }
+
+    function setFeatureVisibility(sectionEl, toggleBtn, isVisible) {
+        sectionEl.classList.toggle("hidden-feature", !isVisible);
+        toggleBtn.classList.toggle("feature-active", isVisible);
+    }
+
+    function resetFeatureVisibility() {
+        setFeatureVisibility(findReplaceSection, toggleFindReplaceBtn, false);
+        setFeatureVisibility(generatorSection, toggleGeneratorBtn, false);
+        updateHighlights();
     }
 
     /* ================= EXTRACT ================= */
@@ -319,6 +398,192 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("copyCleanBtn").onclick = () =>
         navigator.clipboard.writeText(extractUrls(urlInput.value, true).join("\n"));
 
+    /* ================= FIND & REPLACE ================= */
+
+    replaceBtn.onclick = () => {
+        const findText = findTextInput.value;
+        const replaceText = replaceTextInput.value;
+        const sourceText = urlInput.value;
+
+        if (!findText) {
+            showModal({
+                type: "info",
+                title: "Find Text Required",
+                message: "Please enter text to find.",
+                showCancel: false
+            });
+            return;
+        }
+
+        if (!sourceText) {
+            showModal({
+                type: "error",
+                title: "No Input Found",
+                message: "Please enter some text or URLs first.",
+                showCancel: false
+            });
+            return;
+        }
+
+        const pattern = new RegExp(escapeRegExp(findText), "g");
+        const matches = sourceText.match(pattern) || [];
+
+        if (matches.length === 0) {
+            status.textContent = "No matches found.";
+            setTimeout(() => status.textContent = "", 1500);
+            return;
+        }
+
+        urlInput.value = sourceText.replace(pattern, replaceText);
+        updateCounter();
+        toggleClearButton();
+        saveState();
+        status.textContent = `Replaced ${matches.length} occurrence(s).`;
+        setTimeout(() => status.textContent = "", 1500);
+    };
+
+    toggleFindReplaceBtn.onclick = () => {
+        const isVisible = findReplaceSection.classList.contains("hidden-feature");
+        setFeatureVisibility(findReplaceSection, toggleFindReplaceBtn, isVisible);
+        updateHighlights();
+    };
+
+    /* ================= URL GENERATOR ================= */
+
+    toggleGeneratorBtn.onclick = () => {
+        const isVisible = generatorSection.classList.contains("hidden-feature");
+        setFeatureVisibility(generatorSection, toggleGeneratorBtn, isVisible);
+    };
+
+    generateBtn.onclick = async () => {
+        const pattern = patternInput.value.trim();
+        const start = parseInt(startNumberInput.value, 10);
+        const end = parseInt(endNumberInput.value, 10);
+        const step = parseInt(stepNumberInput.value, 10);
+        const mode = sequenceMode.value;
+
+        if (!pattern) {
+            showModal({
+                type: "info",
+                title: "Pattern Required",
+                message: "Please enter a URL pattern first.",
+                showCancel: false
+            });
+            return;
+        }
+
+        if (!Number.isInteger(start) || !Number.isInteger(end)) {
+            showModal({
+                type: "error",
+                title: "Invalid Range",
+                message: "Start and End must be valid whole numbers.",
+                showCancel: false
+            });
+            return;
+        }
+
+        if (!Number.isInteger(step) || step <= 0) {
+            showModal({
+                type: "error",
+                title: "Invalid Step",
+                message: "Step must be greater than 0.",
+                showCancel: false
+            });
+            return;
+        }
+
+        if (mode === "increment" && start > end) {
+            showModal({
+                type: "error",
+                title: "Range Mismatch",
+                message: "For Increment mode, Start must be less than or equal to End.",
+                showCancel: false
+            });
+            return;
+        }
+
+        if (mode === "decrement" && start < end) {
+            showModal({
+                type: "error",
+                title: "Range Mismatch",
+                message: "For Decrement mode, Start must be greater than or equal to End.",
+                showCancel: false
+            });
+            return;
+        }
+
+        if (!pattern.includes("{n}") && !/\d+/.test(pattern)) {
+            showModal({
+                type: "error",
+                title: "Pattern Not Supported",
+                message: "Use {n} in URL or include at least one number (e.g. ramu1.pdf).",
+                showCancel: false
+            });
+            return;
+        }
+
+        const totalCount = mode === "increment"
+            ? Math.floor((end - start) / step) + 1
+            : Math.floor((start - end) / step) + 1;
+
+        if (totalCount <= 0) {
+            showModal({
+                type: "error",
+                title: "Nothing To Generate",
+                message: "Please check your range and step values.",
+                showCancel: false
+            });
+            return;
+        }
+
+        if (totalCount > 2000) {
+            const confirmed = await showModal({
+                type: "warning",
+                title: "Generate Large List?",
+                message: `You are about to generate ${totalCount} URLs.`,
+                confirmText: "Generate",
+                cancelText: "Cancel"
+            });
+            if (!confirmed) return;
+        }
+
+        const generatedUrls = [];
+        if (mode === "increment") {
+            for (let i = start; i <= end; i += step) {
+                const nextUrl = applyPatternNumber(pattern, i);
+                if (nextUrl) generatedUrls.push(nextUrl);
+            }
+        } else {
+            for (let i = start; i >= end; i -= step) {
+                const nextUrl = applyPatternNumber(pattern, i);
+                if (nextUrl) generatedUrls.push(nextUrl);
+            }
+        }
+
+        if (generatedUrls.length === 0) {
+            showModal({
+                type: "error",
+                title: "Generation Failed",
+                message: "Could not build URLs from the provided pattern.",
+                showCancel: false
+            });
+            return;
+        }
+
+        const generatedText = generatedUrls.join("\n");
+        if (urlInput.value.trim()) {
+            urlInput.value = `${urlInput.value.trimEnd()}\n${generatedText}`;
+        } else {
+            urlInput.value = generatedText;
+        }
+
+        updateCounter();
+        toggleClearButton();
+        saveState();
+        status.textContent = `Generated ${generatedUrls.length} URL(s).`;
+        setTimeout(() => status.textContent = "", 1500);
+    };
+
     /* ================= CLEAR BUTTON ================= */
 
     function toggleClearButton() {
@@ -364,7 +629,16 @@ document.addEventListener("DOMContentLoaded", () => {
         applyTheme("light");
         chrome.storage.local.clear();
         urlInput.value = "";
+        findTextInput.value = "";
+        replaceTextInput.value = "";
+        patternInput.value = "";
+        startNumberInput.value = 1;
+        endNumberInput.value = 10;
+        stepNumberInput.value = 1;
+        sequenceMode.value = "increment";
         updateCounter();
+        toggleClearButton();
+        resetFeatureVisibility();
     };
 
     /* ================= STORAGE ================= */
@@ -387,10 +661,13 @@ document.addEventListener("DOMContentLoaded", () => {
         updateCounter();
         saveState();
     });
+    urlInput.addEventListener("scroll", syncHighlightScroll);
+    findTextInput.addEventListener("input", updateHighlights);
 
     rememberCb.addEventListener("change", saveState);
     limitInput.addEventListener("input", updateCounter);
 
+    resetFeatureVisibility();
     loadState();
     updateCounter();
 });

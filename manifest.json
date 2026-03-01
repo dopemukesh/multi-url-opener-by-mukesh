@@ -1,5 +1,5 @@
 {
-    "manifest_version": 4,
+    "manifest_version": 3,
     "name": "Multi URL Opener by Mukesh",
     "version": "2.1",
     "description": "Open multiple URLs at once with advanced features.",
